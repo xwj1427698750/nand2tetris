@@ -14,4 +14,18 @@ CHIP Xor {
 
     PARTS:
     // Put your code here:
+	Not(in = a, out = a0);
+	Not(in = b, out = b0);
+	
+	//方法一用的Nand芯片较少
+	Nand(a = a, b = b0, out = c1);
+	Nand(a = a0, b = b, out = c2);
+	Nand(a = c1, b = c2, out = out);
+	
+	//方法二
+	//And(a= a,b=b0, out=c1);
+	//And(a= a0,b=b, out=c2);
+	//Or(a=c1,b=c2,out=out);
+	
+	
 }
