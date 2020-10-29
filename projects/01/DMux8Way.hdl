@@ -7,7 +7,11 @@
  * 8-way demultiplexor:
  * {a, b, c, d, e, f, g, h} = {in, 0, 0, 0, 0, 0, 0, 0} if sel == 000
  *                            {0, in, 0, 0, 0, 0, 0, 0} if sel == 001
- *                            etc.
+ *                            {0, 0, in, 0, 0, 0, 0, 0} if sel == 010
+ *                            {0, 0, 0, in, 0, 0, 0, 0} if sel == 011
+ *                            {0, 0, 0, 0, in, 0, 0, 0} if sel == 100
+ *                            {0, 0, 0, 0, 0, in, 0, 0} if sel == 101
+ *                            {0, 0, 0, 0, 0, 0,n 0, 0} if sel == 110
  *                            {0, 0, 0, 0, 0, 0, 0, in} if sel == 111
  */
 
@@ -17,4 +21,12 @@ CHIP DMux8Way {
 
     PARTS:
     // Put your code here:
+	//类似DMux4Way中的表达式
+	//sel[1] sel[0] 对应DMux4Way 输出的是 ae, bf, cg, dh,
+    //sel[2]再细分ae中a与e的输出, bf中b与f的输出, cg中c与g的输出, dh中d与h的输出
+    DMux4Way(in = in, sel[1] = sel[1], sel[0] = sel[0], a = ae, b = bf, c = cg, d = dh);
+    DMux(in = ae, sel = sel[2], a = a, b = e);	
+	DMux(in = bf, sel = sel[2], a = b, b = f);	
+	DMux(in = cg, sel = sel[2], a = c, b = g);	
+	DMux(in = dh, sel = sel[2], a = d, b = h);	
 }

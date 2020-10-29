@@ -17,4 +17,12 @@ CHIP DMux4Way {
 
     PARTS:
     // Put your code here:
+	// a = in*(~s[1])*(~s[0]) = (~s[0])*(in*(~s[1]))
+	// b = in*(~s[1])*( s[0]) = ( s[0])*(in*(~s[1]))
+	// c = in*( s[1])*(~s[0]) = (~s[0])*(in*( s[1]))
+	// d = in*( s[1])*( s[0]) = ( s[0])*(in*( s[1]))
+	// sel[0]确定ac,还是bd, 若确定了ac, 则sel[1]再从ac中确定a或者c
+	DMux(in = in, sel = sel[0], a = ac, b = bd);
+	DMux(in = ac, sel = sel[1], a = a, b = c);
+	DMux(in = bd, sel = sel[1], a = b, b = d);
 }

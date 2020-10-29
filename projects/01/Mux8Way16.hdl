@@ -19,4 +19,11 @@ CHIP Mux8Way16 {
 
     PARTS:
     // Put your code here:
-}
+	//根据真值表可以得出
+	// f = ~sel[2]*(~sel[1]*(a*(~sel[0]) + b*sel[0])+sel[1]*(c*(~sel[0]) + d*sel[0])) +
+	//      sel[2]*(~sel[1]*(e*(~sel[0]) + f*sel[0])+sel[1]*(g*(~sel[0]) + h*sel[0]))
+	
+	Mux4Way16(a = a, b = b, c = c ,d = d, sel[1] = sel[1], sel[0] = sel[0], out = abcd);
+	Mux4Way16(a = e, b = f, c = g ,d = h, sel[1] = sel[1], sel[0] = sel[0], out = efgh);
+	Mux16(a = abcd, b = efgh, sel = sel[2], out = out);
+}	
