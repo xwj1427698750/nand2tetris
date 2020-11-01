@@ -42,5 +42,39 @@ CHIP ALU {
         ng; // 1 if (out < 0),  0 otherwise
 
     PARTS:
-   // Put you code here:
+	   // Put you code here:
+	   // deal with zx and nx
+	   And16(a = x, b[0..15] = false, out = zeroX);
+	   Mux16(a = x, b =zeroX , sel = zx, out = zxOut);
+	   Not16(in = zxOut, out = notZxOut);
+	   Mux16(a = zxOut, b =notZxOut , sel = nx, out = nxOut);
+	   
+	   // deal with zy and ny
+	   And16(a = y, b[0..15] = false, out = zeroY);
+	   Mux16(a = y, b =zeroY , sel = zy, out = zyOut);
+	   Not16(in = zyOut, out = notZyOut);
+	   Mux16(a = zyOut, b =notZyOut , sel = ny, out = nyOut);
+	   
+	   // deal with f and no
+	   Add16(a = nxOut, b = nyOut, out = xAddY);
+	   And16(a = nxOut, b = nyOut, out = xAndY); 
+	   Mux16(a = xAndY, b = xAddY, sel = f, out = fOut);
+	   
+	   // out
+	   Not16(in = fOut, out = notFOut);
+	   Mux16(a = fOut , b = notFOut, sel = no, out = fOut2); 
+	   
+	   //ng
+	   //And(a = fOut2[15], b = true, out = ng); //这种写法会报错：fOut2[15]: sub bus of an internal node may not be used
+	   IsNeg16(in = fOut2, out = ng);
+	   
+	   //zr
+	   //Or8Way(in = fOut2[0..7], out = outOr0to7);  //这种写法也会报错：sub bus of an internal node may not be used
+	   //Or8Way(in = fOut2[8..15], out = outOr8to15);
+	   //Or(a = outOr0to7, b = outOr8to15, out = outOr0to15);
+	   Or16Way(in = fOut2, out = outOr0to15);
+	   Mux(a = true, b = false, sel = outOr0to15, out = zr);
+	  
+	   And16(a = fOut2,b[0..15] = true, out = out);
+	   
 }

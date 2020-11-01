@@ -14,4 +14,14 @@ CHIP FullAdder {
 
     PARTS:
     // Put you code here:
+	// 方法一：根据真值表，分别求出carry和sum的表达式
+    //	carry = (~a)bc + a(~b)c + ab(~c) + abc
+	//       = ((~a)b + a(~b)) + ab
+	//  sum = (~a)* HalfAdder(b,c).sum + a * (~HalfAdder(b,c)).sum 
+	//  HalfAdder(b,c).sum 表示 HalfAdder(b,c)输出中的sum
+	
+	// 方法二：使用3个半加器
+	HalfAdder(a = b, b = c, carry = carry0, sum = sum0);
+	HalfAdder(a = a, b = sum0, carry = carry1, sum = sum);   
+	HalfAdder(a = carry0, b = carry1, carry = other, sum = carry); 
 }
