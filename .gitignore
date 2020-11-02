@@ -1,5 +1,6 @@
 *.out
 *.cmp
 *.tst
-tools/
+tools/*
+tools/bin/*
 
