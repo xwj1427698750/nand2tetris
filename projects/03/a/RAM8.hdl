@@ -19,15 +19,7 @@ CHIP RAM8 {
 	// 这个芯片的构建思路一开始不是很明确，后来根据p44的图3.3，先构建了直接存储逻辑，然后不知道如何按照组合逻辑（读取逻辑）和时序逻辑（写逻辑）两种方式将直接存储逻辑和8个寄存器绑定起来，
 	// 因为书上p50处的介绍读取的时候，将读取过程视为组合逻辑，写的过程看作组合逻辑，
 	// 如果书上对读取的过程描述成load=0的时序逻辑思路会更清晰一点,和下面load=1的时序逻辑就统一起来，后面就进行了load=0 读取逻辑的尝试。
-	DMux8Way(in = true, sel = address, a = add0, b = add1, c = add2, d = add3, e = add4, f = add5, g = add6, h = add7);
-	And(a = load, b = add0, out = load0);
-	And(a = load, b = add1, out = load1);
-	And(a = load, b = add2, out = load2);
-	And(a = load, b = add3, out = load3);
-	And(a = load, b = add4, out = load4);
-	And(a = load, b = add5, out = load5);
-	And(a = load, b = add6, out = load6);
-	And(a = load, b = add7, out = load7);
+	DMux8Way(in = load, sel = address, a = load0, b = load1, c = load2, d = load3, e = load4, f = load5, g = load6, h = load7);
 	Register(in = in , load = load0, out = r0);
 	Register(in = in , load = load1, out = r1);
 	Register(in = in , load = load2, out = r2);
