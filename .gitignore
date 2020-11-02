@@ -2,5 +2,5 @@
 *.cmp
 *.tst
 tools/*
-tools/bin/*
+
 
