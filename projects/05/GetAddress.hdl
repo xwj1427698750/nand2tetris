@@ -1,0 +1,20 @@
+CHIP GetAddress{
+	IN in[16];
+	OUT address[15];
+	PARTS:
+	And(a = in[0], b = true, out = address[0]);
+	And(a = in[1], b = true, out = address[1]);
+	And(a = in[2], b = true, out = address[2]);
+	And(a = in[3], b = true, out = address[3]);
+	And(a = in[4], b = true, out = address[4]);
+	And(a = in[5], b = true, out = address[5]);
+	And(a = in[6], b = true, out = address[6]);
+	And(a = in[7], b = true, out = address[7]);
+	And(a = in[8], b = true, out = address[8]);
+	And(a = in[9], b = true, out = address[9]);
+	And(a = in[10], b = true, out = address[10]);
+	And(a = in[11], b = true, out = address[11]);
+	And(a = in[12], b = true, out = address[12]);
+	And(a = in[13], b = true, out = address[13]);
+	And(a = in[14], b = true, out = address[14]);
+}

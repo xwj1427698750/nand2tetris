@@ -40,4 +40,44 @@ CHIP CPU {
 
     PARTS:
     // Put your code here:
+	/**Note:对于A-指令，主要关注是否加载到A寄存器，CPU的输出地址addressM和pc是否正确。
+	  *     对于C-指令，关注点在于 A寄存器与D寄存器的内容的加载，CPU的计算输出，以及PC寄存器的内容加载是否正确）
+	  */
+	/**A-指令会加载到A寄存器，c指令中的d1位=1，对应将ALU计算结果存入A寄存器中
+	  *AInstr=1表示A指令, 结果存入A寄存器
+	  *CInstr=1表示C指令且结果存入A寄存器
+	  *loadA=1表示加载到A寄存器
+	  */
+	Not(in = instruction[15] ,out = AInstr); 
+	And(a = instruction[15], b = instruction[5], out = CInstr); 
+	Or(a = AInstr, b = CInstr, out = loadA); 
+	Mux16(a = instruction, b = aluOut, sel = instruction[15], out = AIn);
+	ARegister(in = AIn, load = loadA, out = A);  
+	
+	Mux16(a = A, b = inM, sel = instruction[12], out = AOrM); //instruction[12]表示a位域，A还是M进入ALU参与计算
+	
+	And(a = instruction[15], b = instruction[4], out = loadD);//C指令中的d2位对应是否将ALU计算结果存入D寄存器中
+	DRegister(in = aluOut, load = loadD, out = D);  
+	
+	ALU(x = D, y = AOrM, zx = instruction[11], nx = instruction[10], zy = instruction[9], ny = instruction[8], f = instruction[7],
+	no =instruction[6], out = outM, out = aluOut, zr = zr, ng = ng); 
+	And(a = instruction[3], b = instruction[15], out = writeM); //只有是c指令的时候, writeM才生效
+	
+	GetAddress(in = A, address = addressM);
+	
+	Or(a = zr, b = ng, out = o1);
+	Not(in = o1, out = pt);                   //pt=1代表out大于0
+	And(a = ng, b = instruction[2], out = j1);
+	And(a = zr, b = instruction[1], out = j2);
+	And(a = pt, b = instruction[0], out = j3);
+	Or(a = j1, b = j2, out = j12);
+	Or(a = j12, b = j3, out = jump1);                //jump1表示指令中给出的跳转条件
+	And(a = jump1, b = instruction[15], out = jump); //只有是c指令的时候，jump表示是否跳转, jump=1表示跳转
+	PC(in = A, load = jump , inc = true , reset = reset, out = pcOut);
+	GetAddress(in = pcOut, address = pc);
+	
 }
+
+
+
+
